@@ -12,6 +12,7 @@ This project is a single-page Quarto report for analytical work supporting an eL
 
 ## Authoring and checks
 
+- Use `awk` for text replacement and not Python scripts.
 - Use Markdown and Quarto conventions. Read `.agents/skills/quarto-authoring/SKILL.md` for Quarto-specific tasks and only the relevant reference files.
 - Use stable section, equation, table, and figure labels for cross-references.
 - Separate multiplied variables or factors with `\,` in LaTeX equations, for example `$w_{12}\,w_{21}$`.

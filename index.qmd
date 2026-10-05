@@ -6,22 +6,656 @@ lightbox: true
 
 Analytical notes, supporting results, and response material for the eLife revision.
 
-## Revision overview {#sec-overview}
+**Goal**: compare a covariance-dominated rule with the rate-dominated rule in a setting with multiple competing inhibitory-to-excitatory connections.
 
-*To be completed: manuscript details and the analytical questions raised during review.*
+Throughout, we take $h_e>0$, $r_i>0$, and all kernel timescales positive. We assume $M>0$ for both rules; for the covariance-dominated rule, this requires $\tau_->\tau_+$. The inputs, inhibitory rate, fixed weight $W_e$, and rule constants are held constant during the weight dynamics.
 
-## Reviewer questions {#sec-reviewer-questions}
+## Three neuron motif {#sec-three-neuron-motif}
 
-*Add each reviewer question with its identifier, the analysis needed, and its current status.*
+![Three-neuron motif with one excitatory neuron and two inhibitory neurons. The diagram labels the excitatory input $h_e$, an excitatory-to-inhibitory connection $W_e$, two inhibitory-to-excitatory connections $W_1$ and $W_2$, inhibitory rates are $r_i$, fixed by an adaptive input.](Attachments/20261005-113251-three_neurons_motif.png){#fig-three-neuron-motif fig-alt="c_1 cyan triangular neuron above two magenta circular neurons. Blue arrows indicate input and an excitatory connection; red dashed connections with terminal dots link both lower neurons to the upper neuron." width=450px}
 
-## Analyses and results {#sec-analyses}
+We consider a simple three-neuron motif, with one excitatory neuron and two inhibitory neurons, modeled as Hawkes processes (@fig-three-neuron-motif). The excitatory neuron receives a constant input $h_e$, and projects to one of the inhibitory neurons with a strong weight $W_e$. The two inhibitory neurons project back to the excitatory neuron with plastic weights $W_1$ and $W_2$. All neurons have an exponential synaptic kernel with timescale $\tau_{\text{syn}}$.
 
-*For each analysis, record the question, assumptions, methods, results, and implications for the revision. Link supporting scripts and attachments where relevant.*
+In the three-neuron system of @fig-three-neuron-motif, the inhibitory rates $r_i$ are kept constant by an adaptive input. The excitatory rate instead is given by:
+$$
+r_e = h_e - W_1 \,r_i - W_2 \,r_i = h_e - (W_1 + W_2) \,r_i
+$$ {#eq-excitatory-rate}
 
-## Response and manuscript changes {#sec-response}
+The excitatory neuron projects to a single inhibitory neuron with a fixed weight $W_e$, that we assume strong. Therefore inhibitory neuron 1 will have a strong correlation with the excitatory neuron, while inhibitory neuron 2 will be assumed as uncorrelated.
 
-*Draft responses and record the corresponding manuscript or figure changes, linking to the analyses above.*
+The two inhibitory-to-excitatory weights $W_1$ and $W_2$ are plastic, following identical symmetric plasticity rules. The average synaptic weight dynamics are given by:
+$$
+\begin{aligned}
+\frac{d\,W_1}{dt} &= \alpha_{\text{pre}} \,r_i + \alpha_{\text{post}} \,r_e + B \,r_i \,r_e - M^{10}\,W_1\,r_i  + M^{01}\, W_e \, r_e \\
+\frac{d\,W_2}{dt} &= \alpha_{\text{pre}} \,r_i + \alpha_{\text{post}} \,r_e + B \,r_i \,r_e - M^{10}\,W_2\,r_i
+\end{aligned}
+$$ {#eq-weight-dynamics}
+Where $B$ is the area under the STDP curve, and the $M$ terms represent the first-order motif contributions to plasticity (ignoring higher order contributions). Since here we only consider symmetric rules $M^{10} = M^{01} := M$.
 
-## Revision notes {#sec-revision-notes}
+In the Vogels-Spreckeler rule we have:
+$$
+\alpha_{\text{pre}}^{\text{Vog}} \simeq -1, \quad \alpha_{\text{post}}^{\text{Vog}} = 0, \quad B^{\text{Vog}} = 1
+$$ {#eq-vogels-constants}
+And the $M^{\text{Vog}}$ term is:
+$$
+M^{\text{Vog}} = \frac{1}{2\,\left(\tau_+ + \tau_{\text{syn}} \right)}
+$$ {#eq-vogels-motif}
 
-*Record dated decisions, completed work, and remaining questions here.*
+
+In the covariance-dominated rule instead:
+$$
+\alpha_{\text{pre}}^{\text{cov}} \simeq 1, \quad \alpha_{\text{post}}^{\text{cov}} \simeq 1, \quad B^{\text{cov}} = 0
+$$ {#eq-covariance-constants}
+And the $M^{\text{cov}}$ term is:
+$$
+M^{\text{cov}} = \frac{1}{2\,\left(\tau_+ + \tau_{\text{syn}} \right)}
+-  \frac{1}{2\,\left(\tau_- + \tau_{\text{syn}} \right)}
+$$ {#eq-covariance-motif}
+
+For $\tau_- \gg \tau_+$ and $\tau_- \gg \tau_{\text{syn}}$, $M^{\text{Vog}}$ and $M^{\text{cov}}$ are similar, the main difference being between $B^{\text{Vog}}$ and $B^{\text{cov}}$.
+
+### Sum and difference modes {#sec-sum-difference-modes}
+
+Keeping the rule constants general, we define the sum and difference modes as
+
+$$
+W_s := W_1 + W_2, \qquad W_d := W_1 - W_2.
+$$ {#eq-weight-modes}
+
+With this convention, $W_d > 0$ means that $W_1$ is stronger than $W_2$. The original weights are recovered as
+
+$$
+W_1 = \frac{W_s + W_d}{2}, \qquad
+W_2 = \frac{W_s - W_d}{2}.
+$$ {#eq-weight-modes-inverse}
+
+Using @eq-excitatory-rate and the definition in @eq-weight-modes, the excitatory rate depends only on the sum mode:
+
+$$
+r_e = h_e - W_s\,r_i.
+$$ {#eq-rate-sum-mode}
+
+Adding and subtracting the two weight equations in @eq-weight-dynamics, with $M^{10} = M^{01} = M$, gives
+
+$$
+\begin{aligned}
+\frac{d\,W_s}{dt}
+&= 2\,\alpha_{\text{pre}}\,r_i
+ + 2\,\alpha_{\text{post}}\,r_e
+ + 2\,B\,r_i\,r_e
+ - M\,W_s\,r_i + M\,W_e\,r_e, \\
+\frac{d\,W_d}{dt}
+&= -M\,W_d\,r_i + M\,W_e\,r_e.
+\end{aligned}
+$$ {#eq-mode-dynamics}
+
+Substituting @eq-rate-sum-mode yields a closed system for the two modes:
+
+$$
+\begin{aligned}
+\frac{d\,W_s}{dt}
+&= 2\,\alpha_{\text{pre}}\,r_i
+ + \left(2\,\alpha_{\text{post}} + 2\,B\,r_i + M\,W_e\right)
+   \left(h_e - W_s\,r_i\right)
+ - M\,W_s\,r_i, \\
+\frac{d\,W_d}{dt}
+&= -M\,W_d\,r_i + M\,W_e\,\left(h_e - W_s\,r_i\right).
+\end{aligned}
+$$ {#eq-mode-dynamics-closed}
+
+The shared rate-dependent plasticity terms cancel in the difference equation. The sum mode evolves independently of $W_d$, while the difference mode is driven by the sum through $r_e$ and by the additional $W_e$ term in the $W_1$ equation.
+
+### Fixed points of the modes and individual weights {#sec-mode-fixed-points}
+
+To simplify the expressions, define
+
+$$
+c_1 := 2\,\alpha_{\text{post}} + 2\,B\,r_i + M\,W_e,
+\qquad c_2 := c_1 + M.
+$$ {#eq-mode-coefficients}
+
+Using @eq-mode-coefficients, the sum equation in @eq-mode-dynamics-closed becomes
+
+$$
+\frac{d\,W_s}{dt}
+= 2\,\alpha_{\text{pre}}\,r_i + c_1\,h_e - r_i\,c_2\,W_s.
+$$ {#eq-sum-affine}
+
+Substituting $c_1$ and $c_2$ from @eq-mode-coefficients, the fixed point simplifies to
+
+$$
+\begin{aligned}
+r_e^{\infty}
+&= \frac{M\,h_e - 2\,\alpha_{\text{pre}}\,r_i}
+ {M\,(1+W_e) + 2\,\alpha_{\text{post}} + 2\,B\,r_i}, \\
+W_s^{\infty}
+&= \frac{h_e-r_e^{\infty}}{r_i}
+ = \frac{2\,\alpha_{\text{pre}}\,r_i
+ + \left(2\,\alpha_{\text{post}}+2\,B\,r_i+M\,W_e\right)\,h_e}
+ {r_i\,\left[M\,(1+W_e)+2\,\alpha_{\text{post}}+2\,B\,r_i\right]}, \\
+W_d^{\infty}
+&= \frac{W_e\,r_e^{\infty}}{r_i}
+ = \frac{W_e\,\left(M\,h_e-2\,\alpha_{\text{pre}}\,r_i\right)}
+ {r_i\,\left[M\,(1+W_e)+2\,\alpha_{\text{post}}+2\,B\,r_i\right]}.
+\end{aligned}
+$$ {#eq-mode-fixed-points}
+
+Recovering the individual weights with @eq-weight-modes-inverse gives
+
+$$
+\begin{aligned}
+W_1^{\infty}
+&= \frac{W_s^{\infty}+W_d^{\infty}}{2}
+ = \frac{h_e+(W_e-1)\,r_e^{\infty}}{2\,r_i} \\
+&= \frac{\alpha_{\text{pre}}\,(1-W_e)\,r_i
+ + \left(\alpha_{\text{post}}+B\,r_i+M\,W_e\right)\,h_e}
+ {r_i\,\left[M\,(1+W_e)+2\,\alpha_{\text{post}}+2\,B\,r_i\right]}, \\
+W_2^{\infty}
+&= \frac{W_s^{\infty}-W_d^{\infty}}{2}
+ = \frac{h_e-(1+W_e)\,r_e^{\infty}}{2\,r_i} \\
+&= \frac{\alpha_{\text{pre}}\,(1+W_e)\,r_i
+ + \left(\alpha_{\text{post}}+B\,r_i\right)\,h_e}
+ {r_i\,\left[M\,(1+W_e)+2\,\alpha_{\text{post}}+2\,B\,r_i\right]}.
+\end{aligned}
+$$ {#eq-individual-weight-fixed-points}
+
+These expressions assume a nonzero denominator; stability requires it to be positive, as shown below.
+
+Thus, for $W_e > 0$ and $r_e^{\infty} > 0$, the difference is positive: $W_1^{\infty} > W_2^{\infty}$. This follows from the additional excitatory-to-inhibitory motif contribution to the first weight.
+
+These are algebraic fixed points of the unconstrained equations. For nonnegative inhibitory weight magnitudes and excitatory rate, they must also satisfy
+
+$$
+r_e^{\infty} \ge 0, \qquad W_s^{\infty} \ge |W_d^{\infty}|.
+$$ {#eq-mode-fixed-point-admissibility}
+
+For $W_e \ge 0$, these conditions are equivalent to $0 \le r_e^{\infty} \le h_e/(1+W_e)$. If they fail, the algebraic fixed point does not represent a state with nonnegative rates and weights; no weight clipping or boundary dynamics have been specified here.
+
+#### Relative size of the difference and sum {#sec-fixed-point-mode-ratio}
+
+For a stable fixed point with $W_s^{\infty}>0$ and $r_e^{\infty}>0$, the common denominator cancels in the ratio:
+
+$$
+\frac{W_d^{\infty}}{W_s^{\infty}}
+= \frac{W_e\,r_e^{\infty}}{h_e-r_e^{\infty}}
+= \frac{W_e\,\left(M\,h_e-2\,\alpha_{\text{pre}}\,r_i\right)}
+ {2\,\alpha_{\text{pre}}\,r_i
+ + \left(2\,\alpha_{\text{post}}+2\,B\,r_i+M\,W_e\right)\,h_e}.
+$$ {#eq-fixed-point-mode-ratio}
+
+With strictly positive weights, the difference cannot be larger than the sum: $W_s^{\infty}-W_d^{\infty}=2\,W_2^{\infty}>0$. For $W_e>0$, a physically admissible fixed point therefore has $0<W_d^{\infty}/W_s^{\infty}<1$. A ratio close to one means $W_2^{\infty}$ is small relative to $W_1^{\infty}$; equality means $W_2^{\infty}=0$.
+
+For the unconstrained algebraic fixed point, the condition for the difference to exceed the sum simplifies to
+
+$$
+W_d^{\infty}>W_s^{\infty}
+\quad\Longleftrightarrow\quad
+\alpha_{\text{pre}}\,(1+W_e)\,r_i
++ \left(\alpha_{\text{post}}+B\,r_i\right)\,h_e < 0.
+$$ {#eq-difference-exceeds-sum}
+
+This is precisely the condition for a negative second weight, since
+
+$$
+W_2^{\infty}
+= \frac{\alpha_{\text{pre}}\,(1+W_e)\,r_i
+ + \left(\alpha_{\text{post}}+B\,r_i\right)\,h_e}
+ {r_i\,\left[M\,(1+W_e)+2\,\alpha_{\text{post}}+2\,B\,r_i\right]}.
+$$ {#eq-second-weight-fixed-point}
+
+The boundary is independent of $M$, although the ratio itself depends on $M$.
+
+#### Vogels rule {#sec-vogels-fixed-points}
+
+Using the suggested values $\alpha_{\text{pre}}^{\text{Vog}}\simeq-1$, $\alpha_{\text{post}}^{\text{Vog}}=0$, and $B^{\text{Vog}}=1$ from @eq-vogels-constants gives
+
+$$
+\begin{aligned}
+r_e^{\infty,\text{Vog}}
+&\simeq \frac{M^{\text{Vog}}\,h_e+2\,r_i}
+ {M^{\text{Vog}}\,(1+W_e)+2\,r_i}, \\
+W_s^{\infty,\text{Vog}}
+&\simeq \frac{\left(2\,r_i+M^{\text{Vog}}\,W_e\right)\,h_e-2\,r_i}
+ {r_i\,\left[M^{\text{Vog}}\,(1+W_e)+2\,r_i\right]}, \\
+W_d^{\infty,\text{Vog}}
+&\simeq \frac{W_e\,\left(M^{\text{Vog}}\,h_e+2\,r_i\right)}
+ {r_i\,\left[M^{\text{Vog}}\,(1+W_e)+2\,r_i\right]}, \\
+W_1^{\infty,\text{Vog}}
+&\simeq \frac{\left(r_i+M^{\text{Vog}}\,W_e\right)\,h_e+(W_e-1)\,r_i}
+ {r_i\,\left[M^{\text{Vog}}\,(1+W_e)+2\,r_i\right]}, \\
+W_2^{\infty,\text{Vog}}
+&\simeq \frac{h_e-(1+W_e)}
+ {M^{\text{Vog}}\,(1+W_e)+2\,r_i}.
+\end{aligned}
+$$ {#eq-vogels-fixed-points}
+
+The denominator is positive, so the fixed point is stable and its excitatory rate is positive. With the suggested constants taken at their nominal values, both weights are strictly positive when $h_e>1+W_e$. At $h_e=1+W_e$, the second weight vanishes and the difference equals the sum. Below this boundary, the algebraic second weight is negative.
+
+More generally, retaining the presynaptic constant rather than its approximate value, the boundary is
+
+$$
+B^{\text{Vog}}\,h_e
+= -\alpha_{\text{pre}}^{\text{Vog}}\,(1+W_e).
+$$ {#eq-vogels-second-weight-boundary}
+
+The nominal difference-to-sum ratio is
+
+$$
+\frac{W_d^{\infty,\text{Vog}}}{W_s^{\infty,\text{Vog}}}
+\simeq \frac{W_e\,\left(M^{\text{Vog}}\,h_e+2\,r_i\right)}
+ {\left(2\,r_i+M^{\text{Vog}}\,W_e\right)\,h_e-2\,r_i}.
+$$ {#eq-vogels-fixed-point-ratio}
+
+For fixed $h_e>1$, increasing $W_e$ toward $h_e-1$ from below brings this ratio toward one: the first inhibitory weight dominates while the second approaches zero. Increasing $W_e$ beyond that point leaves the positive-weight regime.
+
+#### Covariance-dominated rule {#sec-covariance-fixed-points}
+
+Using $\alpha_{\text{pre}}^{\text{cov}}\simeq1$, $\alpha_{\text{post}}^{\text{cov}}\simeq1$, and $B^{\text{cov}}=0$ from @eq-covariance-constants gives
+
+$$
+\begin{aligned}
+r_e^{\infty,\text{cov}}
+&\simeq \frac{M^{\text{cov}}\,h_e-2\,r_i}
+ {M^{\text{cov}}\,(1+W_e)+2}, \\
+W_s^{\infty,\text{cov}}
+&\simeq \frac{\left(2+M^{\text{cov}}\,W_e\right)\,h_e+2\,r_i}
+ {r_i\,\left[M^{\text{cov}}\,(1+W_e)+2\right]}, \\
+W_d^{\infty,\text{cov}}
+&\simeq \frac{W_e\,\left(M^{\text{cov}}\,h_e-2\,r_i\right)}
+ {r_i\,\left[M^{\text{cov}}\,(1+W_e)+2\right]}, \\
+W_1^{\infty,\text{cov}}
+&\simeq \frac{\left(1+M^{\text{cov}}\,W_e\right)\,h_e+(1-W_e)\,r_i}
+ {r_i\,\left[M^{\text{cov}}\,(1+W_e)+2\right]}, \\
+W_2^{\infty,\text{cov}}
+&\simeq \frac{h_e+(1+W_e)\,r_i}
+ {r_i\,\left[M^{\text{cov}}\,(1+W_e)+2\right]}.
+\end{aligned}
+$$ {#eq-covariance-fixed-points}
+
+The fixed point is stable. Its excitatory rate is positive when $M^{\text{cov}}\,h_e>2\,r_i$ at the nominal values, or $M^{\text{cov}}\,h_e>2\,\alpha_{\text{pre}}^{\text{cov}}\,r_i$ with the presynaptic constant retained. Under this condition, both weights are positive and $W_1^{\infty}>W_2^{\infty}$ for $W_e>0$; the second weight never reaches zero at finite $W_e$.
+
+The nominal difference-to-sum ratio is
+
+$$
+\frac{W_d^{\infty,\text{cov}}}{W_s^{\infty,\text{cov}}}
+\simeq \frac{W_e\,\left(M^{\text{cov}}\,h_e-2\,r_i\right)}
+ {\left(2+M^{\text{cov}}\,W_e\right)\,h_e+2\,r_i}.
+$$ {#eq-covariance-fixed-point-ratio}
+
+Holding the other parameters fixed, this ratio increases with $W_e$ but approaches
+
+$$
+\lim_{W_e\to\infty}
+\frac{W_d^{\infty,\text{cov}}}{W_s^{\infty,\text{cov}}}
+\simeq 1-\frac{2\,r_i}{M^{\text{cov}}\,h_e} < 1.
+$$ {#eq-covariance-fixed-point-ratio-limit}
+
+Thus a strong $W_e$ alone does not ensure a ratio close to one: it also requires $M^{\text{cov}}\,h_e\gg2\,r_i$. Close to the positive-rate threshold, the two inhibitory weights remain similar even for large $W_e$.
+
+### Convergence timescales of the sum and difference {#sec-mode-timescales}
+
+Writing $\delta W_s := W_s-W_s^{\infty}$ and $\delta W_d := W_d-W_d^{\infty}$, the deviations obey the exact linear system
+
+$$
+\frac{d}{dt}
+\begin{pmatrix}\delta W_s \\ \delta W_d\end{pmatrix}
+=
+\begin{pmatrix}
+-r_i\,c_2 & 0 \\
+-M\,W_e\,r_i & -M\,r_i
+\end{pmatrix}
+\begin{pmatrix}\delta W_s \\ \delta W_d\end{pmatrix}.
+$$ {#eq-mode-deviations}
+
+The triangular matrix has eigenvalues $\lambda_s=-r_i\,c_2$ and $\lambda_d=-r_i\,M$. Therefore both modes converge to the algebraic fixed point precisely when $c_2>0$. Their exponential timescales are
+
+$$
+\tau_s = \frac{1}{r_i\,c_2}, \qquad
+\tau_d = \frac{1}{r_i\,M}.
+$$ {#eq-mode-timescales}
+
+The sum relaxes independently as $\delta W_s(t)=\delta W_s(0)\,e^{-t/\tau_s}$. The difference also receives a transient forcing from the sum, so its trajectory generally contains both timescales. Once the sum has settled, the difference relaxes toward $W_d^{\infty}$ on $\tau_d$. When $c_2=M$, the forcing can produce a $t\,e^{-M\,r_i\,t}$ transient. Special initial conditions can eliminate one of the exponential contributions.
+
+The sum converges much faster than the difference when
+
+$$
+\frac{\tau_d}{\tau_s}
+= \frac{c_2}{M}
+= 1 + W_e + \frac{2\,\alpha_{\text{post}} + 2\,B\,r_i}{M}
+\gg 1,
+\qquad c_2>0.
+$$ {#eq-mode-timescale-separation}
+
+Thus a strong $W_e$, a sufficiently positive postsynaptic term, or a large positive rate-dependent term $B\,r_i$ can produce a fast sum and a slow difference. The presynaptic constant $\alpha_{\text{pre}}$ shifts the fixed point but does not change these eigenvalues. The inhibitory rate multiplies both decay rates and also affects their ratio through $B\,r_i$.
+
+#### Vogels rule {#sec-vogels-timescales}
+
+Substituting $\alpha_{\text{post}}^{\text{Vog}}=0$ and $B^{\text{Vog}}=1$ from @eq-vogels-constants gives
+
+$$
+\begin{aligned}
+\tau_s^{\text{Vog}}
+&= \frac{1}{r_i\,\left[M^{\text{Vog}}\,(1+W_e)+2\,r_i\right]}, \\
+\tau_d^{\text{Vog}}
+&= \frac{1}{r_i\,M^{\text{Vog}}}
+ = \frac{2\,\left(\tau_++\tau_{\text{syn}}\right)}{r_i}, \\
+\frac{\tau_d^{\text{Vog}}}{\tau_s^{\text{Vog}}}
+&= 1+W_e+\frac{2\,r_i}{M^{\text{Vog}}}
+ = 1+W_e+4\,r_i\,\left(\tau_++\tau_{\text{syn}}\right).
+\end{aligned}
+$$ {#eq-rule-timescale-ratios}
+
+The sum is faster than the difference, and a large separation requires $W_e+2\,r_i/M^{\text{Vog}}\gg1$. It can arise from a strong $W_e$ or from the rate-dependent contribution $2\,r_i$. Increasing $r_i$ accelerates both modes, with the sum becoming relatively faster: when $2\,r_i\gg M^{\text{Vog}}\,(1+W_e)$, $\tau_s^{\text{Vog}}\simeq1/(2\,r_i^2)$, whereas $\tau_d^{\text{Vog}}$ scales as $1/r_i$.
+
+The positive-weight condition from @sec-vogels-fixed-points must still hold. At the nominal presynaptic value, it restricts $W_e<h_e-1$. Thus increasing $W_e$ to accelerate the sum is limited by the available excitatory input if both weights must remain positive. The rate-dependent contribution can provide separation without approaching the zero-weight boundary.
+
+#### Covariance-dominated rule {#sec-covariance-timescales}
+
+With $B^{\text{cov}}=0$ and $\alpha_{\text{post}}^{\text{cov}}\simeq1$ from @eq-covariance-constants, the timescales become
+
+$$
+\begin{aligned}
+\tau_s^{\text{cov}}
+&\simeq \frac{1}{r_i\,\left[M^{\text{cov}}\,(1+W_e)+2\right]}, \\
+\tau_d^{\text{cov}}
+&= \frac{1}{r_i\,M^{\text{cov}}}, \\
+\frac{\tau_d^{\text{cov}}}{\tau_s^{\text{cov}}}
+&= 1+W_e+\frac{2\,\alpha_{\text{post}}^{\text{cov}}}{M^{\text{cov}}}
+ \simeq 1+W_e+\frac{2}{M^{\text{cov}}}.
+\end{aligned}
+$$ {#eq-covariance-timescales}
+
+Again the sum is faster. A large separation requires $W_e+2/M^{\text{cov}}\gg1$ at the nominal postsynaptic value. It can arise from a strong $W_e$ or a small motif coefficient relative to the postsynaptic contribution. Increasing $r_i$ accelerates both modes by the same factor, leaving their timescale ratio unchanged.
+
+Using @eq-covariance-motif, the motif coefficient and difference timescale can also be written as
+
+$$
+M^{\text{cov}}
+= \frac{\tau_--\tau_+}
+ {2\,\left(\tau_++\tau_{\text{syn}}\right)\,\left(\tau_-+\tau_{\text{syn}}\right)},
+\qquad
+\tau_d^{\text{cov}}
+= \frac{2\,\left(\tau_++\tau_{\text{syn}}\right)\,\left(\tau_-+\tau_{\text{syn}}\right)}
+ {r_i\,\left(\tau_--\tau_+\right)}.
+$$ {#eq-covariance-kernel-timescale}
+
+As $\tau_-$ approaches $\tau_+$ from above, $M^{\text{cov}}$ becomes small and the difference relaxes slowly. However, @sec-covariance-fixed-points requires $M^{\text{cov}}\,h_e>2\,r_i$ for a positive excitatory rate at the nominal presynaptic value. At fixed $h_e$ and $r_i$, $M^{\text{cov}}$ therefore cannot be made arbitrarily small while retaining a positive-rate fixed point. In particular, this condition bounds the nominal timescale ratio by $\tau_d^{\text{cov}}/\tau_s^{\text{cov}}<1+W_e+h_e/r_i$.
+
+For either rule, timescale separation describes the dynamics around the algebraic fixed point; the conditions for positive rates and weights in @sec-mode-fixed-points must be checked as well.
+
+## Generalization to N inhibitory neurons and K excitatory targets {#sec-n-k-generalization}
+
+We now consider one excitatory neuron and $N$ inhibitory neurons, of which $K$ receive an excitatory-to-inhibitory synapse of fixed weight $W_e$ each (the $w_e$ in the generalized setup). Here
+
+$$
+N,K\in\mathbb{N}, \qquad 1\le K<N.
+$$ {#eq-nk-domain}
+
+Thus $N\ge2$, and both targeted and untargeted inhibitory groups are nonempty. The three-neuron motif above is the special case $N=2$, $K=1$. The weight $W_e\ge0$ is the weight of **each** excitatory synapse, so the total outgoing excitatory weight is $K\,W_e$.
+
+We retain the same modeling assumptions: all inhibitory rates are held at the common value $r_i>0$ by adaptive inputs, all inhibitory-to-excitatory weights follow the same symmetric rule with $M>0$, and only first-order motif contributions are included. We assume no additional inhibitory-to-inhibitory connections. This is a generalization of the averaged plasticity equations in @eq-weight-dynamics within that approximation.
+
+### Two effective inhibitory weights {#sec-nk-weight-dynamics}
+
+Under the assumed symmetry within each group, let $W_c$ be the common inhibitory-to-excitatory weight of the $K$ neurons receiving the excitatory connection, and $W_u$ the common weight of the remaining $N-K$ neurons. The subscripts $c$ and $u$ denote neurons with and without that direct excitatory connection. The two effective weights obey
+
+$$
+\begin{aligned}
+r_e&=h_e-r_i\,\left[K\,W_c+(N-K)\,W_u\right], \\
+\frac{d\,W_c}{dt}
+&=\alpha_{\text{pre}}\,r_i
+ +\left(\alpha_{\text{post}}+B\,r_i+M\,W_e\right)\,r_e
+ -M\,r_i\,W_c, \\
+\frac{d\,W_u}{dt}
+&=\alpha_{\text{pre}}\,r_i
+ +\left(\alpha_{\text{post}}+B\,r_i\right)\,r_e
+ -M\,r_i\,W_u.
+\end{aligned}
+$$ {#eq-nk-group-dynamics}
+
+These equations preserve equal weights within each group. The weight $W_c$ is a weight per synapse; the targeted group's total inhibitory weight is $K\,W_c$, and the untargeted group's is $(N-K)\,W_u$.
+
+Define the total weight and the difference between the two effective weights as
+
+$$
+W_s:=K\,W_c+(N-K)\,W_u,
+\qquad
+W_d:=W_c-W_u.
+$$ {#eq-nk-mode-definitions}
+
+The inverse transformation is
+
+$$
+W_c=\frac{W_s+(N-K)\,W_d}{N},
+\qquad
+W_u=\frac{W_s-K\,W_d}{N}.
+$$ {#eq-nk-mode-inverse}
+
+### Closed sum and difference equations {#sec-nk-mode-dynamics}
+
+Multiplying the two equations in @eq-nk-group-dynamics by their group sizes and adding, or subtracting them directly, yields
+
+$$
+\begin{aligned}
+r_e&=h_e-r_i\,W_s, \\
+\frac{d\,W_s}{dt}
+&=N\,\alpha_{\text{pre}}\,r_i
+ +\left(N\,\alpha_{\text{post}}+N\,B\,r_i+K\,M\,W_e\right)\,r_e
+ -M\,r_i\,W_s, \\
+\frac{d\,W_d}{dt}
+&=-M\,r_i\,W_d+M\,W_e\,r_e.
+\end{aligned}
+$$ {#eq-nk-mode-dynamics}
+
+Only the sum equation acquires the population factors $N$ and $K$. The shared plasticity terms still cancel from the difference of effective weights. The excitatory contribution to that difference is $M\,W_e\,r_e$ because each targeted neuron receives one synapse of weight $W_e$.
+
+Define the generalized coefficients
+
+$$
+\begin{aligned}
+c_1^{(N,K)}&:=N\,\alpha_{\text{post}}+N\,B\,r_i+K\,M\,W_e, \\
+c_2^{(N,K)}&:=c_1^{(N,K)}+M
+ =M\,(1+K\,W_e)+N\,\alpha_{\text{post}}+N\,B\,r_i.
+\end{aligned}
+$$ {#eq-nk-coefficients}
+
+The closed equations are then
+
+$$
+\begin{aligned}
+\frac{d\,W_s}{dt}
+&=N\,\alpha_{\text{pre}}\,r_i+c_1^{(N,K)}\,h_e
+ -r_i\,c_2^{(N,K)}\,W_s, \\
+\frac{d\,W_d}{dt}
+&=-M\,r_i\,W_d+M\,W_e\,\left(h_e-r_i\,W_s\right).
+\end{aligned}
+$$ {#eq-nk-closed-dynamics}
+
+### Fixed points and admissibility {#sec-nk-fixed-points}
+
+For $c_2^{(N,K)}\ne0$, the algebraic fixed point is
+
+$$
+\begin{aligned}
+r_e^{\infty}
+&=\frac{M\,h_e-N\,\alpha_{\text{pre}}\,r_i}{c_2^{(N,K)}}, \\
+W_s^{\infty}
+&=\frac{h_e-r_e^{\infty}}{r_i}
+ =\frac{N\,\alpha_{\text{pre}}\,r_i+c_1^{(N,K)}\,h_e}
+ {r_i\,c_2^{(N,K)}}, \\
+W_d^{\infty}
+&=\frac{W_e\,r_e^{\infty}}{r_i}, \\
+W_c^{\infty}
+&=\frac{h_e+\left[(N-K)\,W_e-1\right]\,r_e^{\infty}}{N\,r_i} \\
+&=\frac{\alpha_{\text{pre}}\,\left[1-(N-K)\,W_e\right]\,r_i
+ +\left(\alpha_{\text{post}}+B\,r_i+M\,W_e\right)\,h_e}
+ {r_i\,c_2^{(N,K)}}, \\
+W_u^{\infty}
+&=\frac{h_e-(1+K\,W_e)\,r_e^{\infty}}{N\,r_i} \\
+&=\frac{\alpha_{\text{pre}}\,(1+K\,W_e)\,r_i
+ +\left(\alpha_{\text{post}}+B\,r_i\right)\,h_e}
+ {r_i\,c_2^{(N,K)}}.
+\end{aligned}
+$$ {#eq-nk-fixed-points}
+
+For $W_e>0$ and $r_e^{\infty}>0$, each targeted synapse is stronger than each untargeted synapse.
+
+For $W_e\ge0$, nonnegative weights and excitatory rate at the fixed point are equivalent to
+
+$$
+0\le r_e^{\infty}\le\frac{h_e}{1+K\,W_e}.
+$$ {#eq-nk-admissibility}
+
+Indeed, the upper bound is the condition $W_u^{\infty}\ge0$, and $W_c^{\infty}=W_u^{\infty}+W_e\,r_e^{\infty}/r_i\ge0$ then follows. Strictly positive rates and weights require strict inequalities. These are fixed-point conditions; they do not impose clipping or ensure that every unconstrained trajectory stays in the nonnegative domain.
+
+#### Difference relative to the total weight {#sec-nk-mode-ratio}
+
+For $W_s^{\infty}>0$ and $r_e^{\infty}>0$,
+
+$$
+\frac{W_d^{\infty}}{W_s^{\infty}}
+=\frac{W_e\,r_e^{\infty}}{h_e-r_e^{\infty}}.
+$$ {#eq-nk-difference-sum-ratio}
+
+Since $W_s^{\infty}-K\,W_d^{\infty}=N\,W_u^{\infty}$, a useful normalized contrast is
+
+$$
+\rho_{N,K}:=\frac{K\,W_d^{\infty}}{W_s^{\infty}}
+=\frac{K\,W_e\,\left(M\,h_e-N\,\alpha_{\text{pre}}\,r_i\right)}
+ {N\,\alpha_{\text{pre}}\,r_i+c_1^{(N,K)}\,h_e}.
+$$ {#eq-nk-normalized-contrast}
+
+For $W_e>0$ and a fixed point with strictly positive rates and weights, $0<\rho_{N,K}<1$, or equivalently $0<W_d^{\infty}/W_s^{\infty}<1/K$. The boundary $\rho_{N,K}=1$ means all untargeted weights vanish. For a stable algebraic fixed point, this boundary and its continuation to negative untargeted weights are determined by
+
+$$
+W_u^{\infty}<0
+\quad\Longleftrightarrow\quad
+\alpha_{\text{pre}}\,(1+K\,W_e)\,r_i
+ +\left(\alpha_{\text{post}}+B\,r_i\right)\,h_e<0.
+$$ {#eq-nk-untargeted-negative}
+
+The fraction of total inhibitory weight carried by the targeted group is
+
+$$
+\frac{K\,W_c^{\infty}}{W_s^{\infty}}
+=\frac{K}{N}+\frac{N-K}{N}\,\rho_{N,K}.
+$$ {#eq-nk-targeted-weight-fraction}
+
+Thus equal weights give a targeted share $K/N$, while $\rho_{N,K}\to1$ concentrates the total weight in the targeted group.
+
+### Convergence timescales of the two effective weights {#sec-nk-timescales}
+
+Writing $\delta W_s:=W_s-W_s^{\infty}$ and $\delta W_d:=W_d-W_d^{\infty}$, the two-mode system satisfies
+
+$$
+\frac{d}{dt}
+\begin{pmatrix}\delta W_s\\\delta W_d\end{pmatrix}
+=
+\begin{pmatrix}
+-r_i\,c_2^{(N,K)}&0\\
+-M\,W_e\,r_i&-M\,r_i
+\end{pmatrix}
+\,\begin{pmatrix}\delta W_s\\\delta W_d\end{pmatrix}.
+$$ {#eq-nk-mode-deviations}
+
+Its two eigenvalues are
+
+$$
+\lambda_s=-r_i\,c_2^{(N,K)},
+\qquad
+\lambda_d=-M\,r_i.
+$$ {#eq-nk-eigenvalues}
+
+Since $M>0$ and $r_i>0$, the unconstrained fixed point is asymptotically stable precisely when $c_2^{(N,K)}>0$. The timescales and their ratio are
+
+$$
+\begin{aligned}
+\tau_s^{(N,K)}&=\frac{1}{r_i\,c_2^{(N,K)}},
+&\tau_d^{(N,K)}&=\frac{1}{M\,r_i}, \\
+\frac{\tau_d^{(N,K)}}{\tau_s^{(N,K)}}
+&=1+K\,W_e+\frac{N\,\left(\alpha_{\text{post}}+B\,r_i\right)}{M}.
+\end{aligned}
+$$ {#eq-nk-timescales}
+
+The sum is much faster when this ratio is much larger than one. Increasing $K$ at fixed weight per excitatory synapse strengthens the total feedback contribution $K\,W_e$; increasing $N$ scales the shared postsynaptic and rate-dependent terms. Neither changes the intrinsic difference timescale when $M$ and $r_i$ are fixed. The difference is forced by the sum and generally contains both timescales. If $c_2^{(N,K)}=M$, this forcing can produce a $t\,e^{-M\,r_i\,t}$ transient, as in the three-neuron case.
+
+### The two plasticity rules for general N and K {#sec-nk-rule-comparison}
+
+#### Vogels rule {#sec-nk-vogels}
+
+At the nominal values $\alpha_{\text{pre}}^{\text{Vog}}\simeq-1$, $\alpha_{\text{post}}^{\text{Vog}}=0$, and $B^{\text{Vog}}=1$, define
+
+$$
+D_{\text{Vog}}:=M^{\text{Vog}}\,(1+K\,W_e)+N\,r_i.
+$$ {#eq-nk-vogels-denominator}
+
+Then
+
+$$
+\begin{aligned}
+r_e^{\infty,\text{Vog}}
+&\simeq\frac{M^{\text{Vog}}\,h_e+N\,r_i}{D_{\text{Vog}}}, \\
+W_u^{\infty,\text{Vog}}
+&\simeq\frac{h_e-(1+K\,W_e)}{D_{\text{Vog}}}, \\
+W_c^{\infty,\text{Vog}}
+&=W_u^{\infty,\text{Vog}}
+ +\frac{W_e\,r_e^{\infty,\text{Vog}}}{r_i}, \\
+\rho_{N,K}^{\text{Vog}}
+&\simeq\frac{K\,W_e\,\left(M^{\text{Vog}}\,h_e+N\,r_i\right)}
+ {\left(N\,r_i+K\,M^{\text{Vog}}\,W_e\right)\,h_e-N\,r_i}, \\
+\tau_s^{(N,K),\text{Vog}}
+&=\frac{1}{r_i\,D_{\text{Vog}}},
+\qquad
+\tau_d^{(N,K),\text{Vog}}=\frac{1}{r_i\,M^{\text{Vog}}}, \\
+\frac{\tau_d^{(N,K),\text{Vog}}}{\tau_s^{(N,K),\text{Vog}}}
+&=1+K\,W_e+\frac{N\,r_i}{M^{\text{Vog}}}.
+\end{aligned}
+$$ {#eq-nk-vogels-results}
+
+The denominator is positive, and so is the excitatory rate. At the nominal constants, all inhibitory weights are strictly positive when $h_e>1+K\,W_e$. The untargeted group reaches zero weight at $h_e=1+K\,W_e$, independently of $N$ and $M^{\text{Vog}}$. For fixed $h_e>1$, increasing $W_e$ toward $(h_e-1)/K$ from below brings $\rho_{N,K}^{\text{Vog}}$ toward one. Retaining the presynaptic constant and $B^{\text{Vog}}$, the zero-weight boundary is $B^{\text{Vog}}\,h_e=-\alpha_{\text{pre}}^{\text{Vog}}\,(1+K\,W_e)$.
+
+#### Covariance-dominated rule {#sec-nk-covariance}
+
+At the nominal values $\alpha_{\text{pre}}^{\text{cov}}\simeq1$, $\alpha_{\text{post}}^{\text{cov}}\simeq1$, and $B^{\text{cov}}=0$, define
+
+$$
+D_{\text{cov}}:=M^{\text{cov}}\,(1+K\,W_e)+N.
+$$ {#eq-nk-covariance-denominator}
+
+Then
+
+$$
+\begin{aligned}
+r_e^{\infty,\text{cov}}
+&\simeq\frac{M^{\text{cov}}\,h_e-N\,r_i}{D_{\text{cov}}}, \\
+W_u^{\infty,\text{cov}}
+&\simeq\frac{h_e+(1+K\,W_e)\,r_i}{r_i\,D_{\text{cov}}}, \\
+W_c^{\infty,\text{cov}}
+&=W_u^{\infty,\text{cov}}
+ +\frac{W_e\,r_e^{\infty,\text{cov}}}{r_i}, \\
+\rho_{N,K}^{\text{cov}}
+&\simeq\frac{K\,W_e\,\left(M^{\text{cov}}\,h_e-N\,r_i\right)}
+ {\left(N+K\,M^{\text{cov}}\,W_e\right)\,h_e+N\,r_i}, \\
+\tau_s^{(N,K),\text{cov}}
+&\simeq\frac{1}{r_i\,D_{\text{cov}}},
+\qquad
+\tau_d^{(N,K),\text{cov}}=\frac{1}{r_i\,M^{\text{cov}}}, \\
+\frac{\tau_d^{(N,K),\text{cov}}}{\tau_s^{(N,K),\text{cov}}}
+&\simeq1+K\,W_e+\frac{N}{M^{\text{cov}}}.
+\end{aligned}
+$$ {#eq-nk-covariance-results}
+
+The algebraic fixed point is stable, but its excitatory rate is strictly positive only when $M^{\text{cov}}\,h_e>N\,r_i$ at the nominal constants, or $M^{\text{cov}}\,h_e>N\,\alpha_{\text{pre}}^{\text{cov}}\,r_i$ with the presynaptic constant retained. Under the nominal positive-rate condition, both groups have strictly positive weights for every finite $W_e\ge0$.
+
+Holding $N$, $K$, and the other parameters fixed in this positive-rate regime,
+
+$$
+\lim_{W_e\to\infty}\rho_{N,K}^{\text{cov}}
+\simeq1-\frac{N\,r_i}{M^{\text{cov}}\,h_e}<1.
+$$ {#eq-nk-covariance-contrast-limit}
+
+Thus concentration of weight in the targeted group requires both a strong total excitatory feedback $K\,W_e$ and $M^{\text{cov}}\,h_e\gg N\,r_i$. A larger inhibitory population raises the positive-rate threshold. That same threshold bounds the nominal timescale ratio by $\tau_d^{(N,K),\text{cov}}/\tau_s^{(N,K),\text{cov}}<1+K\,W_e+h_e/r_i$.
+
+### Recovery of the three-neuron case {#sec-nk-three-neuron-recovery}
+
+Setting $N=2$ and $K=1$ gives $W_c=W_1$, $W_u=W_2$, $W_s=W_1+W_2$, and $W_d=W_1-W_2$. The generalized coefficients become $c_1$ and $c_2$ from @eq-mode-coefficients, and @eq-nk-mode-dynamics, @eq-nk-fixed-points, and @eq-nk-timescales reduce to the previous dynamics, fixed points, and timescales. The normalized contrast becomes $\rho_{2,1}=W_d^{\infty}/W_s^{\infty}$.
