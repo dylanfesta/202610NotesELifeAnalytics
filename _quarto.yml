@@ -1,0 +1,22 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - index.qmd
+  resources:
+    - Attachments/**
+
+website:
+  title: "Analytics for eLife revision"
+  search: false
+
+format:
+  html:
+    theme: darkly
+    css: styles.css
+    toc: true
+    toc-depth: 5
+    toc-title: Contents
+    code-fold: true
+
+lang: en

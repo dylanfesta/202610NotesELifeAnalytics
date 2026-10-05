@@ -1,0 +1,27 @@
+---
+title: "Analytics for eLife revision"
+author: "Dylan Festa"
+lightbox: true
+---
+
+Analytical notes, supporting results, and response material for the eLife revision.
+
+## Revision overview {#sec-overview}
+
+*To be completed: manuscript details and the analytical questions raised during review.*
+
+## Reviewer questions {#sec-reviewer-questions}
+
+*Add each reviewer question with its identifier, the analysis needed, and its current status.*
+
+## Analyses and results {#sec-analyses}
+
+*For each analysis, record the question, assumptions, methods, results, and implications for the revision. Link supporting scripts and attachments where relevant.*
+
+## Response and manuscript changes {#sec-response}
+
+*Draft responses and record the corresponding manuscript or figure changes, linking to the analyses above.*
+
+## Revision notes {#sec-revision-notes}
+
+*Record dated decisions, completed work, and remaining questions here.*

@@ -1,0 +1,68 @@
+# Generated Quarto files
+.quarto/
+/.quarto/
+**/*.quarto_ipynb
+
+# Published site
+_site/
+
+# Stray output from single-file renders (quarto render index.qmd),
+# which writes next to the source instead of into _site/
+/site_libs/
+/index.html
+Content/site_libs/
+Content/*.html
+
+# Rendered/compiled document artifacts
+_freeze/
+*_files/
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Editor/IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Environment
+.env
+.env.*
+
+# Logs
+*.log
+logs/
+
+# Cache
+*.cache
+.cache/
+node_modules/
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+
+# Local analysis environments and Python caches
+.local-python/
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

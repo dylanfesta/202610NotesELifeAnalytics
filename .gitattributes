@@ -1,0 +1,4 @@
+# Store project attachments with Git LFS.
+Attachments/** filter=lfs diff=lfs merge=lfs -text
+# Keep the empty-directory marker as ordinary text.
+Attachments/.gitkeep !filter !diff !merge text
