@@ -1,6 +1,13 @@
 # Analytics for eLife revision
 
-A Quarto website for analyses, reviewer questions, and response material supporting an eLife revision. Its landing page links to a concise report and a full analysis. Adapted from `/home/dylan/Repositories/PlasticityAndStructureAnalytics/`.
+[![License: CC0-1.0](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg)](http://creativecommons.org/publicdomain/zero/1.0/)
+[![Website: revision analytics](https://img.shields.io/badge/Website-eLife_revision_analytics-blue.svg)](https://dylanfesta.github.io/202610NotesELifeAnalytics/)
+
+A Quarto website for analyses, reviewer questions, and response material supporting an eLife revision. Its landing page links to a concise report and a full analysis.
+
+This is linked to:
+
+> Festa, D., Cusseddu, C. and Gjorgjieva, J. (2026) “[Structured stabilization in recurrent neural circuits through inhibitory synaptic plasticity](https://doi.org/10.7554/eLife.111666.1),” *eLife*, 15.
 
 ## Requirements
 
