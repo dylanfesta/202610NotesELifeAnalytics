@@ -78,7 +78,7 @@ $$ {#eq-report-target-presynaptic-constant}
 ::: {.callout-tip}
 ## Most important result here!
 
-Given $h_e$, $r_i$, and $W_e$, the stable weights depend on the plasticity parameters only through $r_e^{\left( t \rightarrow \infty \right)}$. Therefore, if the parameters of each rule are chosen to produce the same target rate at a stable fixed point, the final inhibitory weights will also be the same across all possible rules considered here! The solution is rule-invariant, and the only difference between rules is in the dynamics of convergence to the fixed point!
+The final weights depend on the plasticity rule parameters only through $r_e^{\left( t \rightarrow \infty \right)}$. Therefore, any rule that reaches a specific excitatory target rate as a stable fixed point, will also have the same stable final inhibitory weights!!! In this setting the stable solution is rule-invariant, no matter if rate-dominated or covariance dominated, and the only difference between rules is in the dynamics of convergence to the fixed point!
 
 :::
 
