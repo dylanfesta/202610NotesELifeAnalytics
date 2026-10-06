@@ -5,7 +5,6 @@
 
 A Quarto website for analyses, reviewer questions, and response material supporting an eLife revision. **Published here**: [https://dylanfesta.github.io/202610NotesELifeAnalytics/](https://dylanfesta.github.io/202610NotesELifeAnalytics/).
 
-
 This is linked to:
 
 > Festa, D., Cusseddu, C. and Gjorgjieva, J. (2026) “[Structured stabilization in recurrent neural circuits through inhibitory synaptic plasticity](https://doi.org/10.7554/eLife.111666.1),” *eLife*, 15.
@@ -27,6 +26,21 @@ quarto preview
 ```
 
 The rendered pages are `_site/index.html`, `_site/report.html`, and `_site/full-analysis.html`. Only their three source pages are rendered; the README and agent instructions are repository documentation. Build output is ignored by Git.
+
+## Automatic publishing
+
+The workflow in `.github/workflows/publish.yml` renders and publishes the website
+to GitHub Pages on every push to `main`. It can also be started manually from
+the repository’s Actions tab using **Render and publish Quarto site → Run workflow**.
+
+The workflow installs Quarto 1.9.37, fetches Git LFS attachments, renders the
+three pages, and deploys `_site/` as a Pages artifact. Generated HTML stays out
+of Git; no personal access token or additional secrets are required.
+
+In GitHub **Settings → Pages → Build and deployment**, the source must be
+**GitHub Actions**. The published address is
+<https://dylanfesta.github.io/202610NotesELifeAnalytics/>.
+Check the Actions tab for build and deployment results after pushing.
 
 ## Structure
 

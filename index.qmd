@@ -7,3 +7,11 @@ Analytical work supporting the eLife revision.
 
 - [Report](report.qmd): the model scheme and equations of the dynamics and plasticity.
 - [Full analysis](full-analysis.qmd): all analytical notes, derivations, and supporting results.
+
+
+
+**Currently available here**: [https://dylanfesta.github.io/202610NotesELifeAnalytics/](https://dylanfesta.github.io/202610NotesELifeAnalytics/).
+
+These results will be added to:
+
+> Festa, D., Cusseddu, C. and Gjorgjieva, J. (2026) “[Structured stabilization in recurrent neural circuits through inhibitory synaptic plasticity](https://doi.org/10.7554/eLife.111666.1),” *eLife*, 15.
