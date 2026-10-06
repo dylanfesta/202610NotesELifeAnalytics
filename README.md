@@ -1,13 +1,13 @@
 # Analytics for eLife revision
 
-A single-page Quarto report for analyses, reviewer questions, and response material supporting an eLife revision. Adapted from `/home/dylan/Repositories/PlasticityAndStructureAnalytics/`.
+A Quarto website for analyses, reviewer questions, and response material supporting an eLife revision. Its landing page links to a concise report and a full analysis. Adapted from `/home/dylan/Repositories/PlasticityAndStructureAnalytics/`.
 
 ## Requirements
 
 - Quarto (setup verified with version 1.9.37)
 - Git and Git LFS for project attachments
 
-The starter page uses Markdown only and needs no Python, Julia, or R environment.
+The pages use Markdown only and need no Python, Julia, or R environment.
 
 ## Render and preview
 
@@ -18,20 +18,21 @@ quarto render
 quarto preview
 ```
 
-The rendered page is `_site/index.html`. Only `index.qmd` is rendered; the README and agent instructions are repository documentation. Build output is ignored by Git.
+The rendered pages are `_site/index.html`, `_site/report.html`, and `_site/full-analysis.html`. Only their three source pages are rendered; the README and agent instructions are repository documentation. Build output is ignored by Git.
 
 ## Structure
 
-- `index.qmd`: the complete report, with sections for reviewer questions, analyses, responses, and revision notes.
-- `_quarto.yml` and `styles.css`: single-page configuration and styling, retaining the template's dark theme and table of contents.
+- `index.qmd`: landing page titled "Analytics for eLife revision", linking to Report and Full analysis.
+- `report.qmd`: concise report, containing the three-neuron model scheme, dynamics and plasticity equations, and concise fixed-point solutions, target-rate calibration, and small-M expansions.
+- `full-analysis.qmd`: all previously existing content, including model definitions, detailed derivations, fixed points, timescales, and the generalization to N inhibitory neurons and K excitatory targets. Add detailed analyses, reviewer responses, and revision notes here.
+- `_quarto.yml` and `styles.css`: three-page configuration and navigation, retaining the template’s dark theme and table of contents.
 - `scripts/`: supporting analysis scripts as they are developed.
 - `Attachments/`: figures and supporting files, tracked with Git LFS.
 - `temp/`: ignored attachment staging directory, created during setup; recreate it after cloning with `mkdir -p temp`.
 - `AGENTS.md` and `CLAUDE.md`: project instructions for coding agents.
 - `.agents/skills/quarto-authoring/`: the template's Quarto authoring skill and references.
-- `.agents/skills/image-attachments/`: attachment workflow adapted for this single page.
+- `.agents/skills/image-attachments/`: attachment workflow for project pages.
 
-The template's separate content and progress-report pages are replaced by sections within `index.qmd`.
 
 ## Attachments
 
@@ -42,7 +43,7 @@ git lfs install --local
 git lfs pull
 ```
 
-Copy attachments into `Attachments/` using `YYYYMMDD[-HHMMSS]-original-filename.ext`. Reference them from `index.qmd` with relative paths, descriptive captions, and alt text:
+Copy attachments into `Attachments/` using `YYYYMMDD[-HHMMSS]-original-filename.ext`. Reference them from `report.qmd` or `full-analysis.qmd` with relative paths, descriptive captions, and alt text:
 
 ```markdown
 ![Descriptive figure caption](Attachments/YYYYMMDD-HHMMSS-figure.png){#fig-example fig-alt="Description of the figure."}
@@ -50,4 +51,4 @@ Copy attachments into `Attachments/` using `YYYYMMDD[-HHMMSS]-original-filename.
 
 Replace the example filename with an actual attachment before adding it to the page. Keep analytical assumptions, methods, script commands, and findings together so each result can be reproduced.
 
-The starter contains placeholders, with no manuscript-specific results or reviewer comments yet.
+The report presents concise model results; the full analysis contains the detailed analytical work.

@@ -3,12 +3,22 @@ project:
   output-dir: _site
   render:
     - index.qmd
+    - report.qmd
+    - full-analysis.qmd
   resources:
     - Attachments/**
 
 website:
   title: "Analytics for eLife revision"
   search: false
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: report.qmd
+        text: Report
+      - href: full-analysis.qmd
+        text: Full analysis
 
 format:
   html:

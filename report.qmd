@@ -1,0 +1,245 @@
+---
+title: "Report"
+author: "Dylan Festa"
+lightbox: true
+---
+
+Analytical notes, supporting results, and response material for the eLife revision.
+
+**Goal**: compare a covariance-dominated rule with the rate-dominated rule in a setting with multiple competing inhibitory-to-excitatory connections.
+
+
+## Three neuron motif dynamics {#sec-three-neuron-motif}
+
+![Three-neuron motif with one excitatory neuron and two inhibitory neurons. The diagram labels the excitatory input $h_e$, an excitatory-to-inhibitory connection $W_e$, two inhibitory-to-excitatory connections $W_1$ and $W_2$, inhibitory rates are $r_i$, fixed by an adaptive input.](Attachments/20261005-113251-three_neurons_motif.png){#fig-three-neuron-motif fig-alt="c_1 cyan triangular neuron above two magenta circular neurons. Blue arrows indicate input and an excitatory connection; red dashed connections with terminal dots link both lower neurons to the upper neuron." width=450px}
+
+We consider a simple three-neuron motif, with one excitatory neuron and two inhibitory neurons, modeled as Hawkes processes (@fig-three-neuron-motif). The excitatory neuron receives a constant input $h_e>0$, and projects to one of the inhibitory neurons with a strong weight $W_e$. In this setting inhibitory neuron 1 will have a strong correlation with the excitatory neuron, while inhibitory neuron 2 will be assumed as uncorrelated. The two inhibitory neurons project back to the excitatory neuron with plastic weights $W_1$ and $W_2$. All neurons have an exponential synaptic kernel with timescale $\tau_{\text{syn}}.$ All synaptic weights are assumed positive. An adaptive input ensures that all inhibitory rates are fixed at $r_i$. The excitatory rate can vary over time and is given by:
+$$
+r_e = h_e - W_1 \,r_i - W_2 \,r_i = h_e - (W_1 + W_2) \,r_i
+$$ {#eq-excitatory-rate}
+
+The two inhibitory-to-excitatory synapses $W_1$ and $W_2$ are plastic, following identical symmetric plasticity rules. The average synaptic weight dynamics are given by:
+$$
+\begin{aligned}
+\frac{d\,W_1}{dt} &= \alpha_{\text{pre}} \,r_i + \alpha_{\text{post}} \,r_e + B \,r_i \,r_e - M^{10}\,W_1\,r_i  + M^{01}\, W_e \, r_e \\
+\frac{d\,W_2}{dt} &= \alpha_{\text{pre}} \,r_i + \alpha_{\text{post}} \,r_e + B \,r_i \,r_e - M^{10}\,W_2\,r_i
+\end{aligned}
+$$ {#eq-weight-dynamics}
+Where $B$ is the area under the STDP curve, and the $M$ terms represent the first-order motif contributions to plasticity (ignoring higher order contributions). Since here we only consider symmetric rules $M^{10} = M^{01} := M$.
+
+In the Vogels-Spreckeler rule we have:
+$$
+\alpha_{\text{post}}^{\text{Vog}} = 0, \quad B^{\text{Vog}} = 1
+$$ {#eq-vogels-constants}
+The $M^{\text{Vog}}$ term is:
+$$
+M^{\text{Vog}} = \frac{1}{2\,\left(\tau_+ + \tau_{\text{syn}} \right)}
+$$ {#eq-vogels-motif}
+And $\alpha_{\text{pre}}^{\text{Vog}}$ is a free parameter set to ensure that the rate of the excitatory neuron is maintained at a target value $r_e^{\text{(target)}}$.
+
+In the covariance-dominated rule instead:
+$$
+ \quad B^{\text{cov}} = 0  ,\quad
+M^{\text{cov}} = \frac{1}{2\,\left(\tau_+ + \tau_{\text{syn}} \right)}
+-  \frac{1}{2\,\left(\tau_- + \tau_{\text{syn}} \right)}
+$$ {#eq-covariance-motif}
+And both $\alpha_{\text{pre}}^{\text{cov}}$ and $\alpha_{\text{post}}^{\text{cov}}$ are free parameters that can be used to set the target rate. Here for simplicity we will set $\alpha_{\text{post}}^{\text{cov}} = 0$, but all our results hold in the general case (see detailed analytic notes).
+
+For $\tau_- \gg \tau_+$ and $\tau_- \gg \tau_{\text{syn}}$, $M^{\text{Vog}}$ and $M^{\text{cov}}$ are similar. The main difference between the rules is therefore in the $B^{\text{Vog}}=1$ and $B^{\text{cov}}=0$ terms.
+
+### Fixed point solution {#sec-report-fixed-point}
+
+#### General {#sec-report-fixed-point-general}
+
+If the stable fixed-point conditions are fulfilled (see detailed analytic notes), the excitatory rate and weights converge to
+
+
+$$
+\begin{aligned}
+r_e^{\left( t \rightarrow \infty \right)}
+&= \frac{M\,h_e-2\,\alpha_{\text{pre}}\,r_i}
+ {M\,(1+W_e)+2\,(\alpha_{\text{post}}+B\,r_i)},\\
+W_1^{\left( t \rightarrow \infty \right)}
+&= \frac{h_e+(W_e-1)\,r_e^{\left( t \rightarrow \infty \right)}}{2\,r_i}, \\
+W_2^{\left( t \rightarrow \infty \right)}
+&= \frac{h_e-(1+W_e)\,r_e^{\left( t \rightarrow \infty \right)}}{2\,r_i}.
+\end{aligned}
+$$ {#eq-report-fixed-point-weights}
+
+Setting the fixed-point rate equal to $r_e^{\text{(target)}}$ requires
+
+$$
+\alpha_{\text{pre}}
+= -\frac{\alpha_{\text{post}}+B\,r_i}{r_i}\,r_e^{\text{(target)}}
+ + \frac{M}{2\,r_i}\,
+   \left[h_e-(1+W_e)\,r_e^{\text{(target)}}\right].
+$$ {#eq-report-target-presynaptic-constant}
+
+::: {.callout-tip}
+## Most important result here!
+
+Given $h_e$, $r_i$, and $W_e$, the stable weights depend on the plasticity parameters only through $r_e^{\left( t \rightarrow \infty \right)}$. Therefore, if the parameters of each rule are chosen to produce the same target rate at a stable fixed point, the final inhibitory weights will also be the same across all possible rules considered here! The solution is rule-invariant, and the only difference between rules is in the dynamics of convergence to the fixed point!
+
+:::
+
+
+#### Vogels-Sprekeler rule {#sec-report-fixed-point-vogels}
+
+With $\alpha_{\text{post}}^{\text{Vog}}=0$ and $B^{\text{Vog}}=1$,
+
+$$
+r_e^{\left( t \rightarrow \infty \right)}
+= \frac{M^{\text{Vog}}\,h_e-2\,\alpha_{\text{pre}}^{\text{Vog}}\,r_i}
+ {M^{\text{Vog}}\,(1+W_e)+2\,r_i},
+\qquad
+\alpha_{\text{pre}}^{\text{Vog}}
+= -r_e^{\text{(target)}}
+ + \frac{M^{\text{Vog}}}{2\,r_i}\,
+   \left[h_e-(1+W_e)\,r_e^{\text{(target)}}\right].
+$$ {#eq-report-vogels-target}
+
+
+#### Covariance-based rule {#sec-report-fixed-point-covariance}
+
+With $\alpha_{\text{post}}^{\text{cov}}=0$ and $B^{\text{cov}}=0$, assuming
+$M^{\text{cov}}>0$ (thus $\tau_->\tau_+$),
+
+$$
+r_e^{\left( t \rightarrow \infty \right)}
+= \frac{h_e}{1+W_e}
+ - \frac{2\,\alpha_{\text{pre}}^{\text{cov}}\,r_i}
+ {M^{\text{cov}}\,(1+W_e)},
+\qquad
+\alpha_{\text{pre}}^{\text{cov}}
+= \frac{M^{\text{cov}}}{2\,r_i}\,
+   \left[h_e-(1+W_e)\,r_e^{\text{(target)}}\right].
+$$ {#eq-report-covariance-target}
+
+### Convergence of sum and difference modes {#sec-report-convergence-modes}
+
+Although the fixed point is rule-invariant, the convergence dynamics are not. To analyze the convergence dynamics, we define sum and difference modes of the inhibitory weights.
+
+$$
+W_s := W_1+W_2,
+\qquad
+W_d := W_1-W_2.
+$$ {#eq-report-mode-definitions}
+We use $\tau_s$ and $\tau_d$ to denote the relaxation times of the sum and difference modes, respectively.
+
+The excitatory rate depends only on the sum mode (see equation @eq-excitatory-rate), therefore the convergence of sum mode is equivalent to the convergence of the excitatory rate to $r_e^{\text{(target)}}$. However, a full separation of weights implies that the difference mode has reached convergence.
+
+Let $\eta>0$ be the learning rate multiplying the right-hand side of each
+plasticity equation in @eq-weight-dynamics (the equations above use $\eta=1$).
+This rescales the convergence times without changing the fixed point.
+
+$$
+\begin{aligned}
+\tau_s
+&= \frac{1}
+ {\eta\,r_i\,\left[M\,(1+W_e)+2\,\alpha_{\text{post}}+2\,B\,r_i\right]}, \\
+\tau_d
+&= \frac{1}{\eta\,M\,r_i}.
+\end{aligned}
+$$ {#eq-report-mode-timescales}
+
+The ratio of the sum-mode timescale to the difference-mode timescale is
+
+$$
+\frac{\tau_s}{\tau_d}
+= \frac{M}{M\,(1+W_e)+2\,(\alpha_{\text{post}}+B\,r_i)}.
+$$ {#eq-report-mode-timescale-ratio}
+
+Since the sum drives the difference through $r_e$, the difference generally contains both timescales.
+
+#### Vogels-Sprekeler rule {#sec-report-timescales-vogels}
+$$
+\begin{aligned}
+\tau_s^{\text{Vog}}
+&= \frac{1}
+ {\eta^{\text{Vog}}\,r_i\,\left[M^{\text{Vog}}\,(1+W_e)+2\,r_i\right]}, \\
+\tau_d^{\text{Vog}}
+&= \frac{1}{\eta^{\text{Vog}}\,M^{\text{Vog}}\,r_i}.\\
+\frac{\tau_s^{\text{Vog}}}{\tau_d^{\text{Vog}}}
+&= \frac{M^{\text{Vog}}}
+ {M^{\text{Vog}}\,(1+W_e)+2\,r_i}.
+\end{aligned}
+$$ {#eq-report-vogels-timescale-ratio}
+
+For $M^{\text{Vog}}\ll2\,r_i$, expanding gives
+
+$$
+\frac{\tau_s^{\text{Vog}}}{\tau_d^{\text{Vog}}}
+= \frac{M^{\text{Vog}}}{2\,r_i}
+ - \frac{(1+W_e)\,(M^{\text{Vog}})^2}{4\,r_i^2}
+ + \mathcal{O}\!\left((M^{\text{Vog}})^3\right).
+$$ {#eq-report-vogels-inverse-ratio-small-m}
+
+Therefore $\tau_s \ll \tau_d$ , the sum relaxes much faster than the difference in this regime.
+
+#### Covariance-based rule {#sec-report-timescales-covariance}
+
+$$
+\begin{aligned}
+\tau_s^{\text{cov}}
+&= \frac{1}
+ {\eta^{\text{cov}}\,M^{\text{cov}}\,r_i\,(1+W_e)}, \\
+\tau_d^{\text{cov}}
+&= \frac{1}{\eta^{\text{cov}}\,M^{\text{cov}}\,r_i}.
+\end{aligned}
+$$ {#eq-report-covariance-timescales}
+
+$$
+\frac{\tau_s^{\text{cov}}}{\tau_d^{\text{cov}}}
+= \frac{1}{1+W_e}.
+$$ {#eq-report-covariance-timescale-ratio}
+
+This ratio is independent of $M^{\text{cov}}$ and in our parameter range $\mathcal{O}(1)$.
+
+#### Matching the sum-mode timescales {#sec-report-matched-sum-timescales}
+
+For the same $r_i$ and $W_e$, imposing
+$\tau_s^{\text{Vog}}=\tau_s^{\text{cov}}$ requires
+
+$$
+\frac{\eta^{\text{Vog}}}{\eta^{\text{cov}}}
+= \frac{M^{\text{cov}}\,(1+W_e)}
+ {M^{\text{Vog}}\,(1+W_e)+2\,r_i}.
+$$ {#eq-report-matched-learning-rates}
+
+## Numerical simulations {#sec-report-numerical-simulations}
+
+### Different learning rates {#sec-report-different-learning-rates}
+
+![Numerical simulations comparing rate-dominated (green) and covariance-dominated (purple) symmetric STDP with different learning rates. The upper panel shows the excitatory rate; the lower panel shows the two inhibitory weights. Dashed lines indicate the target rate and fixed-point weights.](Attachments/20261006-150600-differentlearningrates.png){#fig-report-different-learning-rates fig-alt="The green excitatory rate reaches the target faster than the purple rate, while the purple inhibitory weights approach their fixed points faster than the green weights over eight hours." width=100%}
+
+@tbl-report-different-learning-rates gives the analytic relaxation times for @fig-report-different-learning-rates, in hours and including the learning rate $\eta$.
+
+| Plasticity rule | $\tau_{\mathrm{sum}}$ (hours) | $\tau_{\mathrm{diff}}$ (hours) | $\tau_{\mathrm{sum}}/\tau_{\mathrm{diff}}$ |
+| :--- | ---: | ---: | ---: |
+| Rate-dominated | 0.0513 | 1.389 | $1/27.1 \approx 0.037$ |
+| Covariance-dominated | 0.291 | 0.436 | $1/1.5 \approx 0.667$ |
+
+: Analytic relaxation times including the learning rate, for the different-learning-rates comparison. {#tbl-report-different-learning-rates}
+
+### Matched sum-mode timescales {#sec-report-simulation-matched-sum-timescales}
+
+![Numerical simulations with matched sum-mode relaxation times. Rate-dominated (green) and covariance-dominated (purple) symmetric STDP show similar excitatory-rate convergence in the upper panel, while inhibitory-weight separation remains slower for the rate-dominated rule in the lower panel. Dashed lines indicate the target rate and fixed-point weights.](Attachments/20261006-150600-samelearningrate.png){#fig-report-matched-sum-timescales fig-alt="Green and purple excitatory rates approach the same target together. Purple inhibitory weights approach their fixed points within the first few hours, while green weights remain separated from those fixed points at eight hours." width=100%}
+
+For @fig-report-matched-sum-timescales, the supplied analytic times in @tbl-report-matched-sum-timescales have equal sum-mode relaxation times, as considered in @sec-report-matched-sum-timescales. The rate-dominated difference mode remains much slower.
+
+| Plasticity rule | $\tau_{\mathrm{sum}}$ (hours) | $\tau_{\mathrm{diff}}$ (hours) | $\tau_{\mathrm{sum}}/\tau_{\mathrm{diff}}$ |
+| :--- | ---: | ---: | ---: |
+| Rate-dominated | 0.291 | 7.881 | $1/27.1 \approx 0.037$ |
+| Covariance-dominated | 0.291 | 0.436 | $1/1.5 \approx 0.667$ |
+
+: Analytic relaxation times including the learning rate, for the matched-sum-timescale comparison. {#tbl-report-matched-sum-timescales}
+
+
+
+## Conclusions
+
+Although the fixed point is rule-invariant, in the Vogels-Sprekeler rule the sum mode relaxes much faster than the difference mode, while in the covariance-dominated rule the two modes relax on similar timescales. Therefore, the covariance-dominated rule is more effective at separating inhibitory weights, and existing work based on Vogels-Sprekeler might simply ignore or underestimate this very slow adaptation, "masking" is under other effects and variations.
+
+See for example the plot below from [Lagzi & Fairhall (2024)](https://doi.org/10.1126/sciadv.adi4350), based on the Vogels-Sprekeler rule, where the simulation is interrupted much earlier than convergence is reached.
+
+![Average inhibitory postsynaptic potential over time for two inhibitory populations, with simulation traces in blue and theoretical curves in black. Panel G from [Lagzi & Fairhall (2024)](https://doi.org/10.1126/sciadv.adi4350).](Attachments/20261006-154003-Lagzietal.png){#fig-report-lagzi-fairhall fig-alt="Panel G plots average IPSP in millivolts against time from zero to 300 seconds. Dark-blue and light-blue traces separate after an initial rise, with black theoretical curves alongside them and a vertical dotted line near 50 seconds." width=600px}
