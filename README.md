@@ -3,7 +3,8 @@
 [![License: CC0-1.0](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg)](http://creativecommons.org/publicdomain/zero/1.0/)
 [![Website: revision analytics](https://img.shields.io/badge/Website-eLife_revision_analytics-blue.svg)](https://dylanfesta.github.io/202610NotesELifeAnalytics/)
 
-A Quarto website for analyses, reviewer questions, and response material supporting an eLife revision. Its landing page links to a concise report and a full analysis.
+A Quarto website for analyses, reviewer questions, and response material supporting an eLife revision. **Published here**: [https://dylanfesta.github.io/202610NotesELifeAnalytics/](https://dylanfesta.github.io/202610NotesELifeAnalytics/).
+
 
 This is linked to:
 
