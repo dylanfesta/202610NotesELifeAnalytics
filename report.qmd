@@ -223,6 +223,8 @@ $$ {#eq-report-matched-learning-rates}
 
 ### Matched sum-mode timescales {#sec-report-simulation-matched-sum-timescales}
 
+In this numerical simulation the covariance-based rule is unchanged. I only change one single parameter: the learning rate of the Vogels-Sprekeler rule is reduced to match the sum-mode relaxation time of the covariance-based rule, as in @sec-report-matched-sum-timescales. 
+
 ![Numerical simulations with matched sum-mode relaxation times. Rate-dominated (green) and covariance-dominated (purple) symmetric STDP show similar excitatory-rate convergence in the upper panel, while inhibitory-weight separation remains slower for the rate-dominated rule in the lower panel. Dashed lines indicate the target rate and fixed-point weights.](Attachments/20261006-150600-samelearningrate.png){#fig-report-matched-sum-timescales fig-alt="Green and purple excitatory rates approach the same target together. Purple inhibitory weights approach their fixed points within the first few hours, while green weights remain separated from those fixed points at eight hours." width=100%}
 
 For @fig-report-matched-sum-timescales, the supplied analytic times in @tbl-report-matched-sum-timescales have equal sum-mode relaxation times, as considered in @sec-report-matched-sum-timescales. The rate-dominated difference mode remains much slower.
